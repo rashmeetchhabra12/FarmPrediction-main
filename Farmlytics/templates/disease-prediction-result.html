@@ -1,0 +1,194 @@
+{% extends "index.html" %}
+{% block content %}
+
+<!-- Result Section -->
+<section class="result-section">
+  <div class="container">
+    <div class="result-container disease-result">
+      <!-- Result Icon -->
+      <div class="result-icon {% if 'healthy' in result.lower() %}success{% else %}warning{% endif %}">
+        <div class="icon-circle">
+          <i class="fas {% if 'healthy' in result.lower() %}fa-check{% else %}fa-exclamation-triangle{% endif %}"></i>
+        </div>
+        <div class="icon-rings">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+        </div>
+      </div>
+
+      <!-- Result Header -->
+      <div class="result-header">
+        <span class="result-badge {% if 'healthy' in result.lower() %}success{% else %}warning{% endif %}">
+          <i class="fas fa-microscope me-2"></i>Analysis Complete
+        </span>
+        <h1 class="result-title">Disease Detection Result</h1>
+        <p class="result-subtitle">AI-powered analysis of your crop image</p>
+      </div>
+
+      <!-- Image Display -->
+      <div class="analyzed-image">
+        <div class="image-frame">
+          <img src="{{ url_for('send_file', filename=image_file_name)}}" alt="Analyzed crop image">
+          <div class="image-badge">
+            <i class="fas fa-check-circle"></i>
+            <span>Analyzed</span>
+          </div>
+        </div>
+        <p class="image-name">{{ image_file_name }}</p>
+      </div>
+
+      <!-- Main Result Card -->
+      <div class="result-card {% if 'healthy' in result.lower() %}healthy{% else %}disease{% endif %}">
+        <div class="result-card-header">
+          <i class="fas {% if 'healthy' in result.lower() %}fa-heart{% else %}fa-virus{% endif %}"></i>
+          <span>Diagnosis</span>
+        </div>
+        <div class="result-value">
+          <h2>{{ result }}</h2>
+        </div>
+        <div class="result-card-footer">
+          <div class="status-indicator {% if 'healthy' in result.lower() %}healthy{% else %}warning{% endif %}">
+            <i class="fas {% if 'healthy' in result.lower() %}fa-smile{% else %}fa-exclamation-circle{% endif %}"></i>
+            <span>{% if 'healthy' in result.lower() %}Your crop appears healthy!{% else %}Disease detected - Action recommended{% endif %}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations based on result -->
+      {% if 'healthy' not in result.lower() %}
+      <div class="treatment-section">
+        <h3><i class="fas fa-first-aid me-2"></i>Recommended Actions</h3>
+        <div class="treatment-grid">
+          <div class="treatment-card">
+            <div class="treatment-number">1</div>
+            <div class="treatment-content">
+              <h4>Isolate Affected Plants</h4>
+              <p>Prevent disease spread by isolating infected plants from healthy ones</p>
+            </div>
+          </div>
+          <div class="treatment-card">
+            <div class="treatment-number">2</div>
+            <div class="treatment-content">
+              <h4>Remove Infected Parts</h4>
+              <p>Carefully remove and destroy severely infected leaves and branches</p>
+            </div>
+          </div>
+          <div class="treatment-card">
+            <div class="treatment-number">3</div>
+            <div class="treatment-content">
+              <h4>Apply Treatment</h4>
+              <p>Use appropriate fungicides or pesticides as recommended for this condition</p>
+            </div>
+          </div>
+          <div class="treatment-card">
+            <div class="treatment-number">4</div>
+            <div class="treatment-content">
+              <h4>Monitor Progress</h4>
+              <p>Regularly check surrounding plants and reapply treatment if necessary</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="healthy-tips">
+        <h3><i class="fas fa-shield-alt me-2"></i>Keep Your Crops Healthy</h3>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <i class="fas fa-tint"></i>
+            <span>Maintain proper irrigation</span>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-sun"></i>
+            <span>Ensure adequate sunlight</span>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-bug"></i>
+            <span>Monitor for pests regularly</span>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-flask"></i>
+            <span>Apply fertilizers as needed</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div class="result-actions">
+        <a href="/crop-disease" class="btn-action primary">
+          <i class="fas fa-camera me-2"></i>
+          <span>Analyze Another</span>
+        </a>
+        <a href="/fertilizer-recommendation" class="btn-action secondary">
+          <i class="fas fa-flask me-2"></i>
+          <span>Get Fertilizer Suggestion</span>
+        </a>
+        <a href="/" class="btn-action outline">
+          <i class="fas fa-home me-2"></i>
+          <span>Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  window.addEventListener('load', async () => {
+    if (window.FarmlyticsDB) {
+      const result = "{{ result }}";
+      const image = "{{ image_file_name }}";
+      await window.FarmlyticsDB.savePrediction('disease', result, {
+        image: image,
+        timestamp: new Date().toISOString()
+      });
+      console.log('Disease prediction saved to history');
+    }
+  });
+</script>
+
+<style>
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.result-icon .icon-circle {
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.result-icon .ring {
+  animation: ringPulse 2s ease-out infinite;
+}
+
+.result-icon .ring-2 {
+  animation-delay: 0.5s;
+}
+
+.analyzed-image {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.result-card {
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.treatment-section, .healthy-tips {
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.result-actions {
+  animation: fadeInUp 0.6s ease-out 0.8s both;
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
+{% endblock %}
