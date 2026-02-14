@@ -29,7 +29,7 @@ Smart crop recommendation, disease detection, and fertilizer suggestions using M
 
 **Local Setup (5 min)**
 ```bash
-git clone https://github.com/ankit7610/FarmPrediction.git
+git clone https://github.com/rashmeetchhabra12/FarmPrediction-main.git
 # Farmlytics
 
 **AI-Powered Agricultural Intelligence Platform**
@@ -81,7 +81,7 @@ Farmlytics/
 1. Create and activate a virtual environment:
 
 ```bash
-git clone https://github.com/ankit7610/FarmPrediction.git
+git clone https://github.com/rashmeetchhabra12/FarmPrediction-main.git
 cd FarmPrediction
 python -m venv .venv
 source .venv/bin/activate
@@ -158,34 +158,6 @@ pytest -q
 
 ---
 
-## ☁️ Deployment Options (recommended)
-
-1) Render — easiest for Flask apps (connect GitHub, set build & start commands). Use `gunicorn "Farmlytics.app:app"` as start command.
-
-2) Fly.io — container-first, global deploys. Good if you prefer Docker.
-
-3) Google Cloud Run — serverless containers; recommended if you already use GCP.
-
-4) AWS (Elastic Beanstalk / ECS / SageMaker) — if you need tight AWS integration or GPU inference.
-
-Short Render setup:
-
-```bash
-# In Render dashboard: New → Web Service → Connect GitHub repo
-# Build command: pip install -r requirements.txt
-# Start command: gunicorn -w 4 -b 0.0.0.0:$PORT "Farmlytics.app:app"
-```
-
----
-
-## ⚙️ Production Tips
-
-- Serve via `gunicorn` behind an HTTPS-enabled load balancer.
-- Offload large model storage to object storage (S3/GCS) and load at runtime.
-- Add logging and monitoring (Sentry / Cloud logging).
-- Use a small cache (Redis) for expensive repeated predictions if needed.
-
----
 
 ## Contributing
 
